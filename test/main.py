@@ -87,14 +87,14 @@ def simulate_transmission(users, duration):
                     user.slots -= min_user.slots
             min_user.CW = 0  # 送信成功後にCWをリセット
         
-            # 各ユーザーの送信回数と送信データ量をプリント
-            print("\nSimulation ended. Results:")
-            for user in users:
-                average_transmission_rate = user.total_data_transmitted / duration / 10**6 # 平均伝送速度 (Mbps)
-                print(f"User {user.id} transmitted {user.transmitted} times, total data transmitted: {user.total_data_transmitted} bits, average transmission rate: {average_transmission_rate:.2f} Mbps")
-            
-            # 衝突回数をプリント
-            print(f"Total collisions: {collision_count}")
+    # 各ユーザーの送信回数と送信データ量をプリント
+    print("\nSimulation ended. Results:")
+    for user in users:
+        average_transmission_rate = user.total_data_transmitted / duration / 10**6 # 平均伝送速度 (Mbps)
+        print(f"User {user.id} transmitted {user.transmitted} times, total data transmitted: {user.total_data_transmitted} bits, average transmission rate: {average_transmission_rate:.2f} Mbps")
+    
+    # 衝突回数をプリント
+    print(f"Total collisions: {collision_count}")
 
 if __name__ == "__main__":
-    simulate_transmission(users, 120)
+    simulate_transmission(users, 30)
