@@ -31,8 +31,7 @@ users = [User(id=i) for i in range(5)]
 def transmission_time(data, rate):
     return data / rate
 
-def simulate_transmission(users, duration, seed=None):
-
+def simulate_transmission(users, duration):
     current_time = 0
     collision_count = 0
     data_transmission = 1500 # 1500bit
