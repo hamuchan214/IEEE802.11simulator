@@ -1,6 +1,6 @@
 import random
 
-random.seed(123)
+random.seed(666)
 
 class User:
     def __init__(self, id, n=0):
