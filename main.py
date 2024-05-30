@@ -44,10 +44,10 @@ def simulate_transmission(users, duration):
         min_user = next(user for user in users if user.id == min_user_id)
         
         # 衝突チェック
-        collisions = [user for user in users if user.CW == min_cw and user.id != min_user_id]
-        
+        collisions = [user for user in users if user.CW == min_cw and user.id != min_user_id]       
         
         if collisions:
+            print([user.id for user in collisions])
             # ユーザーのCWを出力
             for user in users:
                 print(f"User {user.id} CW = {user.CW:.6f} seconds (waited {user.slots} slots)")
@@ -63,11 +63,13 @@ def simulate_transmission(users, duration):
                 current_time = duration
                 collision_count += 1
                 
-            print(f"\nTime: {current_time:.2f}s - Collision detected! Users: {[user.id for user in collisions] + [min_user_id]}")
+            print(f"\nTime: {current_time}s - Collision detected! Users: {[user.id for user in collisions] + [min_user_id]}")
             
             for user in collisions + [min_user]:
                 print(f"User {user.id} waited {user.slots} slots before collision.")
                 user.re_transmit()
+                
+            print("")
         
         else:
             trans_time = transmission_time(data_transmission, transmission_rate)
