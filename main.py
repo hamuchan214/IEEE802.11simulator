@@ -49,8 +49,8 @@ def simulate_transmission(users, duration):
         collisions = [user for user in users if user.slots == min_slots and user.id != min_user_id]
 
         # collisionsリストの内容をプリント
-        if collisions:
-            print("Collisions detected with users:", [user.id for user in collisions])
+        # if collisions:
+        #     print("Collisions detected with users:", [user.id for user in collisions])
         
         if collisions:
             collision_count += 1
@@ -68,7 +68,7 @@ def simulate_transmission(users, duration):
 
             # 衝突したユーザーをプリント
             collision_ids = [min_user_id] + sorted([user.id for user in collisions])  # 修正: 衝突ユーザーの順序を修正
-            print(f"\nTime: {current_time:.2f}s - Collision detected! Users: {collision_ids}")
+            print(f"\nTime: {current_time}s - Collision detected! Users: {collision_ids}")
             
             for user in collisions + [min_user]:
                 print(f"User {user.id} waited {user.slots} slots before collision.")
