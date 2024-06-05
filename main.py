@@ -24,16 +24,13 @@ class User:
         self.n = 0
         self.CW = self.calculate_CW()
 
-def create_users(num_users=5):
+def create_users(num_users):
     return [User(id=i) for i in range(num_users)]
 
 def transmission_time(data, rate):
     return data / rate
 
 def simulate_transmission(users, duration, rate, print_output=True):
-    # ランダムシードを設定
-    random.seed(666)
-    
     current_time = 0
     collision_count = 0
     data_transmission = 1500  # 1500bit
@@ -116,10 +113,12 @@ def simulate_transmission(users, duration, rate, print_output=True):
     print(f"Total collisions: {collision_count}")
 
 if __name__ == "__main__":
-    # シミュレーションを実行し、途中の出力も表示する
-    users = create_users()  # ユーザーリストを初期化
+    n=5
+    random.seed(666)
+    users = create_users(n)  # ユーザーリストを初期化
     simulate_transmission(users, 120, 12, print_output=False)
     print("\n" + "="*50 + "\n")
-    # シミュレーションを実行し、結果のみ表示する
-    users = create_users()  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, print_output=False)
+    
+    random.seed(666)
+    users = create_users(n)  # ユーザーリストを初期化
+    simulate_transmission(users, 120, 24, print_output=False)
