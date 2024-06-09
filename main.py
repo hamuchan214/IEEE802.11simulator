@@ -33,7 +33,7 @@ def transmission_time(data, rate):
 def simulate_transmission(users, duration, rate, print_output=True):
     current_time = 0
     collision_count = 0
-    data_transmission = 1500  # 1500bit
+    data_transmission = 1500*8  # 1500bit
     transmission_rate = rate * 10**6  # rate Mbps
 
     while current_time < duration:
@@ -116,9 +116,10 @@ if __name__ == "__main__":
     n=5
     random.seed(666)
     users = create_users(n)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, print_output=False)
+    simulate_transmission(users, 120, 12, False)
+    
     print("\n" + "="*50 + "\n")
     
     random.seed(666)
     users = create_users(n)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 24, print_output=False)
+    simulate_transmission(users, 120, 12, False)
