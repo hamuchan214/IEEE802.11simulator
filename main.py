@@ -1,7 +1,13 @@
 import random
 
+print_mode = {0 : "Only Collision",
+                  1 : "ALL",
+                  2 : "No Output"}
+
 class User:
-    def __init__(self, id, n=0):
+    def __init__(self, id, n=0, seed=None):
+        if seed is not None:
+            random.seed(seed)  # シード値にユーザーIDを加えて個別に設定
         self.id = id
         self.n = n
         self.slots = 0
@@ -24,16 +30,16 @@ class User:
         self.n = 0
         self.CW = self.calculate_CW()
 
-def create_users(num_users):
-    return [User(id=i) for i in range(num_users)]
+def create_users(num_users, seed):
+    return [User(id=i, seed=seed) for i in range(num_users)]
 
 def transmission_time(data, rate):
     return data / rate
 
-def simulate_transmission(users, duration, rate, print_output=True):
+def simulate_transmission(users, duration, rate, print_output):
     current_time = 0
     collision_count = 0
-    data_transmission = 1500*8  # 1500bit
+    data_transmission = 1500 * 8  # 1500 bytes to bits
     transmission_rate = rate * 10**6  # rate Mbps
 
     while current_time < duration:
@@ -50,7 +56,7 @@ def simulate_transmission(users, duration, rate, print_output=True):
             collision_count += 1
             current_time += min_cw  # 修正: 衝突時のスロットタイムを追加
             
-            if print_output:
+            if print_output == (print_mode[0] or print_mode[1]):
                 # ユーザーのCWを出力
                 for user in users:
                     print(f"User {user.id} CW = {user.CW:.6f} seconds (waited {user.slots} slots)")
@@ -61,7 +67,7 @@ def simulate_transmission(users, duration, rate, print_output=True):
             else:
                 current_time = duration
 
-            if print_output:
+            if print_output == print_mode[0]:
                 # 衝突したユーザーをプリント
                 collision_ids = [min_user_id] + sorted([user.id for user in collisions])  # 修正: 衝突ユーザーの順序を修正
                 print(f"\nTime: {current_time:.2f}s - Collision detected! Users: {collision_ids}")
@@ -77,8 +83,8 @@ def simulate_transmission(users, duration, rate, print_output=True):
             trans_time = transmission_time(data_transmission, transmission_rate)
             if current_time + trans_time <= duration:
                 current_time += min_cw
-                # if print_output:
-                #     print(f"\nTime: {current_time}s - User {min_user_id} transmitted successfully with CW = {min_cw:.6f} seconds (waited {min_user.slots} slots)")
+                if print_output == print_mode[1]:
+                    print(f"\nTime: {current_time}s - User {min_user_id} transmitted successfully with CW = {min_cw:.6f} seconds (waited {min_user.slots} slots)")
 
                 min_user.transmitted += 1
                 min_user.total_data_transmitted += data_transmission
@@ -92,8 +98,8 @@ def simulate_transmission(users, duration, rate, print_output=True):
                 min_user.total_data_transmitted += data_transmitted
                 min_user.transmitted += 1
 
-                # if print_output:
-                #     print(f"\nTime: {current_time:.2f}s - User {min_user_id} partially transmitted {data_transmitted / 10**6} Mbit due to time limit")
+                if print_output == print_mode[1]:
+                    print(f"\nTime: {current_time:.2f}s - User {min_user_id} partially transmitted {data_transmitted / 10**6} Mbit due to time limit")
 
             # 他のユーザーのCWとスロット待機時間から送信者のCWとスロット待機時間の差を計算して代入
             for user in users:
@@ -113,13 +119,15 @@ def simulate_transmission(users, duration, rate, print_output=True):
     print(f"Total collisions: {collision_count}")
 
 if __name__ == "__main__":
-    n=5
-    random.seed(666)
-    users = create_users(n)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, False)
-    
+    n = 5
+    seed = 123
+
+    # シミュレーションを実行し、途中の出力も表示する
+    users = create_users(n, seed)  # ユーザーリストを初期化
+    simulate_transmission(users, 120, 12, print_output=print_mode[1])
+
     print("\n" + "="*50 + "\n")
-    
-    random.seed(666)
-    users = create_users(n)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, False)
+
+    # シミュレーションを実行し、結果のみ表示する
+    users = create_users(n, seed)  # ユーザーリストを初期化
+    simulate_transmission(users, 120, 12, print_output=print_mode[2])
