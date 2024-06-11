@@ -1,8 +1,9 @@
 import random
 
-print_mode = {0 : "Only Collision",
-                  1 : "ALL",
-                  2 : "No Output"}
+print_mode = {
+            0 : "Only Collision",
+            1 : "ALL",
+            2 : "No Output"}
 
 class User:
     def __init__(self, id, n=0, seed=None):
