@@ -8,7 +8,7 @@ print_mode = {
 class User:
     def __init__(self, id, n=0, seed=None):
         if seed is not None:
-            random.seed(seed + id)
+            random.seed(seed+id)
         self.id = id
         self.n = n
         self.slots = 0
