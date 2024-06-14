@@ -8,7 +8,7 @@ print_mode = {
 class User:
     def __init__(self, id, n=0, seed=None):
         if seed is not None:
-            random.seed(seed)  # シード値にユーザーIDを加えて個別に設定
+            random.seed(seed + id)
         self.id = id
         self.n = n
         self.slots = 0
@@ -120,15 +120,15 @@ def simulate_transmission(users, duration, rate, print_output):
     print(f"Total collisions: {collision_count}")
 
 if __name__ == "__main__":
-    n = 5
+    n = 2
     seed = 123
 
     # シミュレーションを実行し、途中の出力も表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, print_output=print_mode[1])
+    simulate_transmission(users, 120, 24, print_output=print_mode[2])
 
     print("\n" + "="*50 + "\n")
 
     # シミュレーションを実行し、結果のみ表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, print_output=print_mode[2])
+    simulate_transmission(users, 120, 24, print_output=print_mode[2])
