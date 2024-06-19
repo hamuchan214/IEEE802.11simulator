@@ -5,6 +5,25 @@ print_mode = {
             1 : "ALL",
             2 : "No Output"}
 
+transmission_mode = {
+    "a" : {
+        "SLOT_TIME" : 9,
+        "SIFS" : 16,
+        "DIFS" : 34
+    },
+    
+    "b" : {
+        "SLOT_TIME" : 20,
+        "SIFS" : 10,
+        "DIFS" : 50
+    },
+    
+    "g" : {
+        
+    }
+    
+}
+
 class User:
     def __init__(self, id, n=0, seed=None):
         if seed is not None:
@@ -18,8 +37,9 @@ class User:
 
     def calculate_CW(self):
         slot_time = 9 * 10**(-6)  # スロットタイム
-        cw_max = 2**(4 + self.n) - 1
-        slots = random.randint(1, min(cw_max, 1023))  # スロット数が1023を超えないように制限
+        cw_min = 2**(4 + self.n) - 1
+        # slots = random.randint(cw_min, 1023)  # スロット数が1023を超えないように制限
+        slots = random.randint(1, min(cw_min, 1023)) # ?
         self.slots = slots
         return slots * slot_time
 
@@ -81,11 +101,17 @@ def simulate_transmission(users, duration, rate, print_output):
                 user.re_transmit()  # ユーザーのCWをリセット（衝突後）
 
         else:
+            
+                    
             trans_time = transmission_time(data_transmission, transmission_rate)
             if current_time + trans_time <= duration:
                 current_time += min_cw
                 if print_output == print_mode[1]:
                     print(f"\nTime: {current_time}s - User {min_user_id} transmitted successfully with CW = {min_cw:.6f} seconds (waited {min_user.slots} slots)")
+
+                    # ユーザーのCWを出力
+                    for user in users:
+                        print(f"User {user.id} CW = {user.CW:.6f} seconds (waited {user.slots} slots)")
 
                 min_user.transmitted += 1
                 min_user.total_data_transmitted += data_transmission
@@ -99,6 +125,10 @@ def simulate_transmission(users, duration, rate, print_output):
                 min_user.total_data_transmitted += data_transmitted
                 min_user.transmitted += 1
 
+                # ユーザーのCWを出力
+                for user in users:
+                    print(f"User {user.id} CW = {user.CW:.6f} seconds (waited {user.slots} slots)")
+                    
                 if print_output == print_mode[1]:
                     print(f"\nTime: {current_time:.2f}s - User {min_user_id} partially transmitted {data_transmitted / 10**6} Mbit due to time limit")
 
@@ -125,7 +155,7 @@ if __name__ == "__main__":
 
     # シミュレーションを実行し、途中の出力も表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 24, print_output=print_mode[2])
+    simulate_transmission(users, 120, 24, print_output=print_mode[0])
 
     print("\n" + "="*50 + "\n")
 
