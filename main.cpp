@@ -2,13 +2,16 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <random>
 
-#define SLOT_TIME 9e-6                // スロット時間（秒）
+#define SLOT_TIME 20e-6                // スロット時間（秒）
 #define DATA_TRANSMISSION 1500 * 8    // データ伝送量（ビット）
 #define TRANSMISSION_RATE 12e6        // 伝送速度（ビット/秒）
 #define DURATION 120                  // シミュレーションの持続時間（秒）
 #define NUM_USERS 5                   // ユーザーの数
 #define SEED 123                      // 乱数生成のシード
+
+std::default_random_engine generator(SEED); //ポアソン分布用
 
 class User {
 public:
@@ -24,8 +27,10 @@ public:
     }
 
     double calculate_CW() {
-        int cw_max = std::pow(2, 4 + n) - 1;
-        slots = rand() % (cw_max < 1023 ? cw_max : 1023) + 1;
+        int cw_min = 0;
+        int cw_max = (n > 0) ? 1023 : 31; // 再送回数が0より大きい場合は1023まで、そうでない場合は31まで
+        std::uniform_int_distribution<int> distribution(cw_min, cw_max); // CW_minからCW_maxまでの一様分布
+        slots = distribution(generator); // 生成された乱数をスロット数とする
         return slots * SLOT_TIME;
     }
 
