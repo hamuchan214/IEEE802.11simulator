@@ -19,9 +19,10 @@ transmission_mode = {
     },
     
     "g" : {
-        
+        "SLOT_TIME" : 9,
+        "SIFS" : 10,
+        "DIFS" : 28
     }
-    
 }
 
 class User:
@@ -39,7 +40,7 @@ class User:
         slot_time = 9 * 10**(-6)  # スロットタイム
         cw_min = 2**(4 + self.n) - 1
         # slots = random.randint(cw_min, 1023)  # スロット数が1023を超えないように制限
-        slots = random.randint(1, min(cw_min, 1023)) # ?
+        slots = random.randint(1, min(cw_min, 1023))
         self.slots = slots
         return slots * slot_time
 
@@ -151,11 +152,12 @@ def simulate_transmission(users, duration, rate, print_output):
 
 if __name__ == "__main__":
     n = 2
-    seed = 123
+    # seed = 123
+    seed = random.randint(0, 1023)
 
     # シミュレーションを実行し、途中の出力も表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 24, print_output=print_mode[0])
+    simulate_transmission(users, 120, 12, print_output=print_mode[2])
 
     print("\n" + "="*50 + "\n")
 
