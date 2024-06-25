@@ -39,7 +39,6 @@ class User:
     def calculate_CW(self):
         slot_time = 9 * 10**(-6)  # スロットタイム
         cw_max = 2**(4 + self.n) - 1
-        # slots = random.randint(cw_min, 1023)  # スロット数が1023を超えないように制限
         slots = random.randint(1, min(cw_max, 1023))
         self.slots = slots
         return slots * slot_time
