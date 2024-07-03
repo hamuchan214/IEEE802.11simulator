@@ -62,8 +62,10 @@ def simulate_transmission(users, duration, rate, print_output):
     collision_count = 0
     data_transmission = 1500 * 8  # 1500 bytes to bits
     transmission_rate = rate * 10**6  # rate Mbps
+    n = 0
 
     while current_time < duration:
+        
         cw_times = [(user.id, user.slots, user.CW) for user in users]
         cw_times.sort(key=lambda x: x[1])
 
@@ -77,18 +79,15 @@ def simulate_transmission(users, duration, rate, print_output):
             collision_count += 1
             current_time += min_cw  # 修正: 衝突時のスロットタイムを追加
 
-            if print_output == (print_mode[0] or print_mode[1]):
-                # ユーザーのCWを出力
-                for user in users:
-                    print(f"User {user.id} CW = {user.CW:.6f} seconds (waited {user.slots} slots)")
-
             trans_time = transmission_time(data_transmission, transmission_rate)
             if current_time + trans_time <= duration:
                 current_time += trans_time
             else:
                 current_time = duration
 
-            if print_output == print_mode[0]:
+            if print_output == (print_mode[0] or print_mode[1]):
+                print(n)
+                n += 1
                 # 衝突したユーザーをプリント
                 collision_ids = [min_user_id] + sorted([user.id for user in collisions])  # 修正: 衝突ユーザーの順序を修正
                 print(f"\nTime: {current_time:.2f}s - Collision detected! Users: {collision_ids}")
@@ -96,6 +95,10 @@ def simulate_transmission(users, duration, rate, print_output):
                 for user in collisions + [min_user]:
                     print(f"User {user.id} waited {user.slots} slots before collision.")
                 print("")
+
+                # ユーザーのCWを出力
+                for user in users:
+                    print(f"User {user.id} CW = {user.CW:.6f} seconds (waited {user.slots} slots)")
 
             for user in collisions + [min_user]:
                 # user.re_transmit()  # ユーザーのCWをリセット（衝突後）
@@ -107,12 +110,12 @@ def simulate_transmission(users, duration, rate, print_output):
                     user.slots -= min_user.slots
 
         else:
-
-
             trans_time = transmission_time(data_transmission, transmission_rate)
             if current_time + trans_time <= duration:
                 current_time += min_cw
                 if print_output == print_mode[1]:
+                    print(n)
+                    n += 1
                     print(f"\nTime: {current_time}s - User {min_user_id} transmitted successfully with CW = {min_cw:.6f} seconds (waited {min_user.slots} slots)")
 
                     # ユーザーのCWを出力
@@ -157,15 +160,15 @@ def simulate_transmission(users, duration, rate, print_output):
 
 if __name__ == "__main__":
     n = 3
-    # seed = 123
-    seed = random.randint(0, 1023)
+    seed = 123
+    # seed = random.randint(0, 1023)
 
     # シミュレーションを実行し、途中の出力も表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 12, print_output=print_mode[2])
+    simulate_transmission(users, 0.05, 12, print_output=print_mode[2])
 
     print("\n" + "="*50 + "\n")
 
     # シミュレーションを実行し、結果のみ表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 120, 24, print_output=print_mode[2])
+    simulate_transmission(users, 0.05, 24, print_output=print_mode[2])
