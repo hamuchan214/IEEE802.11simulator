@@ -6,6 +6,26 @@ print_mode = {
         2 : "No Output"
 }
 
+transmission_mode = {
+    "a" : {
+        "SLOT_TIME" : 9,
+        "SIFS" : 16,
+        "DIFS" : 34
+    },
+
+    "b" : {
+        "SLOT_TIME" : 20,
+        "SIFS" : 10,
+        "DIFS" : 50
+    },
+
+    "g" : {
+        "SLOT_TIME" : 9,
+        "SIFS" : 10,
+        "DIFS" : 28
+    }
+}
+
 class User:
     def __init__(self, id, n=0, seed=None):
         if seed is not None:
@@ -36,5 +56,22 @@ def create_users(num_users, seed):
 def transmission_time(data, rate):
     return data / rate
 
-
+def simulate_transmission(users, duration, rate, print_output, mode):
+    current_time = 0
+    collision_count = 0
+    transed_data = 1500 * 8
+    trans_rate = rate * 10**6
+    n = 0
+    
+    while current_time < duration:
+        cw_times = [(user.id, user.slots) for user in users]
+        cw_times.sort(key=lambda x: x[1])
         
+        min_user_id, min_slots = cw_times[0]
+        
+        # collision check
+        collisions = [user.id for user in users if user.slots == min_slots and user.id != min_user_id]
+        
+        if collisions:
+            collision_count += 1
+            current_time 
