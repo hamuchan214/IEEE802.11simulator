@@ -1,14 +1,18 @@
 % Define the base URL of the Flask API
-baseUrl = 'http://127.0.0.1:5000/';
+baseUrl = 'http://127.0.0.1:5000/simulate';
 
-% Define the option value to be sent (0 for default, 1 for 'hello matlab')
-optionValue = 1; % Change this to 0 or 1 as needed
+% Define the parameters to be sent
+params = struct('users', 2, 'duration', 120, 'rate', 24, 'print_output', 2);
 
-% Create the full URL with the query parameter
-url = sprintf('%s?option=%d', baseUrl, optionValue);
+% Create the query string
+queryString = sprintf('?users=%d&duration=%d&rate=%f&print_output=%s', ...
+                      params.users, params.duration, params.rate, params.print_output);
+
+% Create the full URL with the query parameters
+url = strcat(baseUrl, queryString);
 
 % Send an HTTP GET request to the Flask API
 response = webread(url);
 
 % Display the response from the Flask API
-disp(response);
+disp(response.result);
