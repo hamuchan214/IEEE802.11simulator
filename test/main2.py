@@ -42,6 +42,7 @@ class User:
     def calc_slots(self):
         cw_max = 2 ** (4 + self.n) - 1
         self.slots = random.randint(1, min(cw_max, 1023))
+        return self.slots
     
     def re_transmit(self):
         self.n += 1
@@ -179,10 +180,10 @@ if __name__ == "__main__":
 
     # シミュレーションを実行し、途中の出力も表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 0.05, 12, print_output=print_mode[2], trans_mode="g")
+    simulate_transmission(users, 10, 12, print_output=print_mode[0], trans_mode="g")
 
     print("\n" + "="*50 + "\n")
 
     # シミュレーションを実行し、結果のみ表示する
     users = create_users(n, seed)  # ユーザーリストを初期化
-    simulate_transmission(users, 0.05, 24, print_output=print_mode[2], trans_mode="g")
+    simulate_transmission(users, 10, 24, print_output=print_mode[2], trans_mode="g")
