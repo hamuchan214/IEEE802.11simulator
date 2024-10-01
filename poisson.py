@@ -36,6 +36,7 @@ class User:
         self.CW = self.calculate_CW()
         self.total_data_transmitted = 0
         self.next_packet_time = self.generate_next_packet_time()
+        print(self.next_packet_time)
 
     def calculate_CW(self):
         slot_time = 9 * 10**(-6)  # スロットタイム
