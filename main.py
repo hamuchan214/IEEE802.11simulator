@@ -83,6 +83,7 @@ def simulate_transmission(users, duration, rate, print_output):
         # Sort each user's CW and slot count
         cw_times = [(user.id, user.slots, user.CW) for user in users]
         cw_times.sort(key=lambda x: x[1])
+        print(cw_times[0])
 
         # Identify the user with the minimum slot
         min_user_id, min_slots, min_cw = cw_times[0]
@@ -172,7 +173,7 @@ def simulate_transmission(users, duration, rate, print_output):
 
 
 if __name__ == "__main__":
-    n = 3
+    n = 20
     seed = 123
     # seed = random.randint(0, 1023)
 
