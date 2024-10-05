@@ -1,3 +1,5 @@
 a.out
+*.drawio.bkp
+*.drawio.dtmp
+.vscode
 a.exe
-.vscode/launch.json
