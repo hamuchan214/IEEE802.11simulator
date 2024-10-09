@@ -1,1 +1,1 @@
-pyrun(import main)
+pyrunfile('csma.py')
