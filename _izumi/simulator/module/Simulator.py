@@ -97,8 +97,18 @@ class Simulator:
         self._TriggerEvent(UpdateEvent(self.time,self.SimDev))
 
         try:
+            count = 0
             while (self._time < duration):
+                t = self.time
                 self._SimulateOne(stack_count)
+                if (t == self.time):
+                    count += 1
+                    self._TriggerEvent(PhysicalEvent(self.time,self.SimDev))
+                    self._TriggerEvent(UpdateEvent(self.time,self.SimDev))
+                    if (count > 3):
+                        raise SimulateUnfinishedError()
+                else:
+                    count = 0
         except Exception as e:
             return e
         else:
@@ -182,6 +192,6 @@ class Simulator:
             if (count > stack_count): raise SimulateStackError()
 
 
-        if (t == self.time): raise SimulateUnfinishedError()
+        #if (t == self.time): raise SimulateUnfinishedError()
 
 

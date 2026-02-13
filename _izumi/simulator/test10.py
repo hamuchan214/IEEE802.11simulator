@@ -54,8 +54,8 @@ def run_one(version_val:int,rate_val:int,num:int,duration:int,seed:int=0) -> Res
 if __name__ == "__main__":
     rand = random.Random(0)
 
-    count = 16
-    duration = int(120*1_000_000)
+    count = 10
+    duration = int(60*1_000_000)
     version = IEEE802dot11Version.a
 
 

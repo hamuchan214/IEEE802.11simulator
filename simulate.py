@@ -286,7 +286,7 @@ Simulator Config
 
             cw_time = self._calc_cw_time(min_slots)
 
-            if users[1].slot == min_slots:
+            if len(users) > 1 and users[1].slot == min_slots:
                 # 衝突が発生した場合
                 current_time += self.__Total_Frame_length + self.__Backoff_count*cw_time
                 if (current_time < duration):
@@ -338,12 +338,14 @@ if __name__ == "__main__":
 
     # デバイス設定
     users = []
-    for i in range(70):
+    for i in range(60):
         users.append(User(i)) # ユーザーをリストにする
 
-    result = sim.Simulate(users, 0.1,0) # シミュレーションを実行
+    results = []
+    for i in range(10):
+        results.append(sim.Simulate(users, 60,0)) # シミュレーションを実行
 
-    print(f'Throughput : {result}Mbps')
+    print(f'Throughput : {sum(results)/len(results)}Mbps')
 
 
 

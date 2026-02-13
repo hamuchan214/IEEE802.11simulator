@@ -41,7 +41,7 @@ def run_one(version_val:int,rate_val:int,num:int,duration:int,seed:int=0) -> Res
         simulator.devices.append(sta)
 
     start = time.time()
-    simulator.Simulate(duration)
+    print(type(simulator.Simulate(duration)))
     lap = time.time() - start
 
     ip = tcp = udp = success = 0
@@ -78,8 +78,8 @@ if __name__ == "__main__":
 
     rand = random.Random(0)
 
-    count = 16
-    duration = int(120*1_000_000)
+    count = 10
+    duration = int(60*1_000_000)
     version = IEEE802dot11Version.a
 
     rate_list = [
@@ -92,22 +92,24 @@ if __name__ == "__main__":
         TransRate.r48Mbps,
         TransRate.r54Mbps
         ]
-    rate_list = [TransRate.r54Mbps]
-    
+    rate_list = [TransRate.r24Mbps]
+
     num_list = [2,5,10,20,30,40,50,60,70,80,90,100]
-    num_list = [100]
+    num_list = [1]
 
     all_results = {'version':version.name,'duration':duration,'result':{}}
     for num in num_list:
         all_results['result'][num] = {}
         for rate in rate_list:
             all_results['result'][num][rate.name] = auto(count,rate,version,duration,num,seed=rand.randint(0,1000000))
-            
+
         path = os.path.join(os.path.dirname(__file__),'result',f'result{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
         with open(path,'w',encoding='utf-8') as f:
             json.dump({'version':version.name,'duration':duration,'num':num,'result':all_results['result'][num][rate.name]},f,indent=4,ensure_ascii=False)
 
-    path = os.path.join(os.path.dirname(__file__),'all_result',f'result{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+    path = os.path.join(os.path.dirname(__file__),'result',f'all_result{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
     with open(path,'w',encoding='utf-8') as f:
         json.dump(all_results,f,indent=4,ensure_ascii=False)
-    
+
+    print(sum(i['ip']/duration for i in all_results['result'][1][TransRate.r24Mbps.name]))
+

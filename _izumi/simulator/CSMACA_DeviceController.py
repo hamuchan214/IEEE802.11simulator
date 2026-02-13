@@ -247,7 +247,7 @@ class CSMACA_DeviceController(DeviceController):
         self._sentData = []
         self._receivedData = []
         self._log = []
-    
+
 
     def Total_IP_payload(self) -> int:
         return sum([data.data.get('IP',0) for data in self.sentData])
@@ -359,7 +359,7 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
         self._holdData = TransData.Null
         self._receivingData = TransData.Null
         self.state = CSMACA_State.WaitDIFS
-        self.nextEvent = SimEvent.Null
+        self.nextEvent = CSMACA_EndDIFS_Event(self.Sim.time+self.version.DIFS,self)
 
         self.ResetResendCount()
         self.generateSlot()
@@ -393,21 +393,21 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
                     if (type(trans) is IEEE802dot11TransData and trans.target.ID == self.ID):
                         self._receivingData = trans
                         self.state = CSMACA_State.Receiving
-                        self.nextEvent = CSMACA_ReceiveCompleteEvent(trans.endTime,self)
+                        self.nextEvent = SimEvent.Null
                     else:
                         self.state = CSMACA_State.Busy
                         self.nextEvent = SimEvent.Null
 
             elif (self.state is CSMACA_State.Receiving):
-                if (self.nextEvent.time <= self.Sim.time):
-                    self.RecieveComplete()
-                else:
-                    if (trans.power<=0):
+                if (trans.power<=0):
+                    if (self._receivingData.endTime <= self.Sim.time):
+                        self.RecieveComplete()
+                    else:
                         self.state = CSMACA_State.WaitDIFS
                         self.nextEvent = CSMACA_EndDIFS_Event(self.Sim.time+self.version.DIFS,self)
-                    elif (trans.transID != self._receivingData.transID):
-                        self.state = CSMACA_State.Busy
-                        self.nextEvent = SimEvent.Null
+                elif (trans.transID != self._receivingData.transID):
+                    self.state = CSMACA_State.Busy
+                    self.nextEvent = SimEvent.Null
 
             elif (self.state is CSMACA_State.Busy):
                 if (trans.power <= 0):
